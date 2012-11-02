@@ -1,0 +1,6 @@
+{
+    "events": [
+        "monomoy-package-accepted"
+    ],
+    "path": "chatham.hooks.queue.PackageAccepted"
+}
