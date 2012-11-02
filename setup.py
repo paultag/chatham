@@ -9,7 +9,8 @@ setup(
     name=__appname__,
     version=__version__,
     packages=[
-        'chatham'
+        'chatham',
+        'chatham.monomoy'
     ],
     author="Paul Tagliamonte",
     author_email="paultag@debian.org",
