@@ -5,7 +5,7 @@ from chatham.queue import ChathamQueue
 
 class PackageAccepted(Hook):
     def fire(self, caller, event, obj):
-        user = obj['user']
+        user = obj['user']['_id']
         package = obj['package']
         changes = db.packages.find_one({"_id": package})
         q = ChathamQueue()
