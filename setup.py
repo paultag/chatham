@@ -10,7 +10,7 @@ setup(
     version=__version__,
     packages=[
         'chatham',
-        'chatham.monomoy'
+        'chatham.hooks'
     ],
     author="Paul Tagliamonte",
     author_email="paultag@debian.org",

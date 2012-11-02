@@ -8,4 +8,6 @@ class PackageAccepted(Hook):
         user = obj['user']
         package = obj['package']
         changes = db.packages.find_one({"_id": package})
-        build_for = changes['changes']['Distribution']
+        q = ChathamQueue()
+        job = q.enqueue(package, user)
+        print "Job %s created." % (job)
