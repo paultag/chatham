@@ -43,4 +43,10 @@ class ChathamQueue(Hook):
             "entered_queue": dt.datetime.now()
         }, safe=True)
 
+        self.fire("chatham-queue-new-job", {
+            "job_id": job_id,
+            "user": user,
+            "package": package
+        })
+
         return job_id
