@@ -1,8 +1,3 @@
-
-# owner:
-# abilities: []
-# ping:
-
 import datetime as dt
 from monomoy.core import db
 
@@ -19,8 +14,11 @@ class ChathamBuilder(Hook):
         self.update()
 
     def update(self):
-        db.builders.update({"_id": self._cache['_id']},
-                           self._cache, safe=True)
+        db.builders.update(
+            {"_id": self._cache['_id']},
+            self._cache,
+            safe=True
+        )
 
     def get_abilities(self):
         pass
