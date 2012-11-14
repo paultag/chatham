@@ -36,3 +36,18 @@ class Builder(Hook):
             raise ChathamBuilderNotFound(name)
 
         self._obj = obj
+
+    def ping(self):
+        pass
+
+    def disable(self):
+        pass
+
+    def purge(self):
+        pass
+
+    def get_owner(self):
+        pass
+
+    def get_authorized_users(self):
+        pass
