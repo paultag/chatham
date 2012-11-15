@@ -27,5 +27,5 @@ class PackageAccepted(Hook):
         user = obj['user']['_id']
         package = obj['package']
         q = ChathamQueue()
-        job = q.enqueue(package, user)
-        print "Job %s created." % (job)
+        for job in q.enqueue(package, user):
+            print "Job %s created." % (job)

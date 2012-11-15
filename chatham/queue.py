@@ -26,6 +26,7 @@ from fishhook import Hook
 class ChathamQueue(Hook):
     def __init__(self):
         self._db = db
+        self._build_types = []
 
     def enqueue(self, package_id, user_id):
         package = self._db.packages.find_one({"_id": package_id})
@@ -36,17 +37,19 @@ class ChathamQueue(Hook):
         if user is None:
             return  # XXX: Throw an exception, again.
 
-        job_id = db.jobs.insert({
-            "package": package['_id'],
-            "user": user['_id'],
-            "builds": [],
-            "queued_at": dt.datetime.now()
-        }, safe=True)
+        for build in self._build_types:
+            job_id = db.jobs.insert({
+                "package": package['_id'],
+                "user": user['_id'],
+                "type": build,
+                "queued_at": dt.datetime.now()
+            }, safe=True)
 
-        self.fire("chatham-queue-new-job", {
-            "job_id": job_id,
-            "user": user,
-            "package": package
-        })
+            self.fire("chatham-queue-new-job", {
+                "job_id": job_id,
+                "user": user,
+                "package": package,
+                "type": build
+            })
 
-        return job_id
+            yield job_id
