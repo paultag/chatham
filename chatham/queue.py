@@ -46,6 +46,7 @@ class ChathamQueue(Hook):
                 "package": package['_id'],
                 "user": user['_id'],
                 "type": build,
+                "builder": None,
                 "queued_at": dt.datetime.now()
             }, safe=True)
 
