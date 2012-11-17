@@ -18,8 +18,9 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-from chatham.errors import ChathamError
+import datetime as dt
 
+from chatham.errors import ChathamError
 from monomoy.core import db
 from fishhook import Hook
 
@@ -38,10 +39,16 @@ class Builder(Hook):
         self._obj = obj
 
     def ping(self):
-        pass
+        self._obj['ping'] = dt.datetime.now()
+        self.save()
 
     def disable(self):
-        pass
+        self._obj['active'] = False
+        self.save()
+
+    def enable(self):
+        self._obj['active'] = True
+        self.save()
 
     def purge(self):
         pass
@@ -51,3 +58,9 @@ class Builder(Hook):
 
     def get_authorized_users(self):
         pass
+
+    def save(self):
+        obj = self._obj
+        self._db.builders.update({"_id": obj['_id']},
+                                 obj,
+                                 safe=True)
