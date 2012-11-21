@@ -62,6 +62,19 @@ class Builder(Hook):
         self.ping()
         return has
 
+    def validate_request(self, signature):
+        secret = self._obj['secret']
+        token = self._obj['token']
+        self._obj['token'] = None
+        self.ping()
+
+        if token is None:
+            return False
+
+        compare = "%s-%s" % (secret, token)
+        has = hashlib.sha256(compare).hexdigest()
+        return signature == has
+
     def save(self):
         obj = self._obj
         self._db.builders.update({"_id": obj['_id']},
