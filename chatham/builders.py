@@ -39,6 +39,18 @@ class Builder(Hook):
 
         self._obj = obj
 
+    def finished_jobs(self):
+        return db.jobs.find({
+            "builder": self._obj['_id'],
+            "finished": True
+        })
+
+    def owned_jobs(self):
+        return db.jobs.find({
+            "builder": self._obj['_id'],
+            "finished": False
+        })
+
     def name(self):
         return self._obj['_id']
 
