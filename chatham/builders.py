@@ -18,6 +18,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
+import hashlib
 import datetime as dt
 
 from chatham.errors import ChathamError
@@ -38,26 +39,28 @@ class Builder(Hook):
 
         self._obj = obj
 
+    def name(self):
+        return self._obj['_id']
+
     def ping(self):
         self._obj['ping'] = dt.datetime.now()
         self.save()
 
     def disable(self):
         self._obj['active'] = False
-        self.save()
+        self.ping()
 
     def enable(self):
         self._obj['active'] = True
-        self.save()
+        self.ping()
 
-    def purge(self):
-        pass
-
-    def get_owner(self):
-        pass
-
-    def get_authorized_users(self):
-        pass
+    def new_token(self):
+        entropy = dt.datetime.now().microsecond
+        s = "%s-%s" % (str(entropy), self.name())
+        has = hashlib.sha256(s).hexdigest()
+        self._obj['token'] = has
+        self.ping()
+        return has
 
     def save(self):
         obj = self._obj
