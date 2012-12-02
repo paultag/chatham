@@ -1,4 +1,5 @@
-*.pyc
+*pyc
 *swp
-*chatham*egg*
-build
+*debuild*egg*
+debuild/static
+less/config.deployment.less
