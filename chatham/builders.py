@@ -66,6 +66,24 @@ class Builder(Hook):
         self._obj['active'] = True
         self.ping()
 
+    def finish(self, jobj):
+        # XXX: Really, fix this. Yesterday.
+        if jobj['builder'] is None:
+            raise Exception(('bad-builder', 'bad builder node'))
+
+        if jobj['builder'] != self._obj['_id']:
+            raise Exception(('bad-builder', 'foo bad builder node'))
+
+        if jobj['finished']:
+            raise Exception(('job-wtf', 'job is already closed, dummy'))
+
+        jobj['finished'] = True
+        jobj['finished_at'] = dt.datetime.now()
+        db.jobs.update({"_id": jobj['_id']},
+                       jobj,
+                       True,
+                       safe=True)
+
     def new_token(self):
         entropy = dt.datetime.now().microsecond
         s = "%s-%s" % (str(entropy), self.name())

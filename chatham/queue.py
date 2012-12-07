@@ -30,6 +30,36 @@ class ChathamQueue(Hook):
             "active": True
         })
 
+    def assign_job(self, job, builder):
+        job['builder'] = builder['_id']
+        db.jobs.update({"_id": job['_id']},
+                       job,
+                       safe=True)
+
+    def next_job(self, builder):
+        outstanding_jobs = builder.owned_jobs()
+        if outstanding_jobs != []:
+            return outstanding_jobs[0]
+
+        abilities = builder['abilities']
+        qualified_jobs = self.get_jobs(abilities)
+        if qualified_jobs.count() <= 0:
+            return None
+
+        job = qualified_jobs[0]
+        self.assign_job(job, builder)
+
+        return job
+
+    def get_jobs(self, abilities):
+        return db.jobs.find({
+            "finished": False,
+            "builder": None,
+            "type": {
+                "$in": abilities
+            }
+        })
+
     def enqueue(self, package_id, user_id):
         package = self._db.packages.find_one({"_id": package_id})
         if package is None:
