@@ -31,17 +31,17 @@ class ChathamQueue(Hook):
         })
 
     def assign_job(self, job, builder):
-        job['builder'] = builder['_id']
+        job['builder'] = builder.get_id()
         db.jobs.update({"_id": job['_id']},
                        job,
                        safe=True)
 
     def next_job(self, builder):
         outstanding_jobs = builder.owned_jobs()
-        if outstanding_jobs != []:
+        if outstanding_jobs.count() > 0:
             return outstanding_jobs[0]
 
-        abilities = builder['abilities']
+        abilities = builder.get_abilities()
         qualified_jobs = self.get_jobs(abilities)
         if qualified_jobs.count() <= 0:
             return None

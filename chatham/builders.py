@@ -30,6 +30,12 @@ class ChathamBuilderNotFound(ChathamError):
     pass
 
 
+class ChathamSanityException(ChathamError):
+    def __init__(self, code, description):
+        self.core = code
+        self.description = description
+
+
 class Builder(Hook):
     def __init__(self, name):
         self._db = db
@@ -38,6 +44,12 @@ class Builder(Hook):
             raise ChathamBuilderNotFound(name)
 
         self._obj = obj
+
+    def get_abilities(self):
+        return self._obj['abilities']
+
+    def get_id(self):
+        return self._obj['_id']
 
     def finished_jobs(self):
         return db.jobs.find({
@@ -69,13 +81,22 @@ class Builder(Hook):
     def finish(self, jobj):
         # XXX: Really, fix this. Yesterday.
         if jobj['builder'] is None:
-            raise Exception(('bad-builder', 'bad builder node'))
+            raise ChathamSanityException(
+                'bad-builder',
+                'bad builder node'
+            )
 
         if jobj['builder'] != self._obj['_id']:
-            raise Exception(('bad-builder', 'foo bad builder node'))
+            raise ChathamSanityException(
+                'bad-builder',
+                'foo bad builder node'
+            )
 
         if jobj['finished']:
-            raise Exception(('job-wtf', 'job is already closed, dummy'))
+            raise ChathamSanityException(
+                'job-wtf',
+                'job is already closed, dummy'
+            )
 
         jobj['finished'] = True
         jobj['finished_at'] = dt.datetime.now()
